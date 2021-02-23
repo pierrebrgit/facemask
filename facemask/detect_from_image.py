@@ -1,4 +1,5 @@
 import cv2
+from cv2 import rectangle
 from mtcnn import MTCNN
 import argparse
 import numpy as np
@@ -45,13 +46,14 @@ for detection in detections:
         print("Prediction :", y_pred)
         y_pred_round = np.round(y_pred)
         print("Prediction(round) :", y_pred_round)
+        print("AP :", round(max(y_pred[0]), 2))
 
         if y_pred_round[0][0] == 1:
             color = (255, 0, 0)
         elif y_pred_round[0][1] == 1:
             color = (0, 255, 0)
         else:
-            color = (0, 0, 255)
+            color = (255, 165, 0)
 
         print("Drawing rect in ", color)
 
@@ -62,9 +64,7 @@ for detection in detections:
               (bounding_box[0]+bounding_box[2], bounding_box[1] + bounding_box[3]),
               color,
               2)
-        # cv2.putText(img, str(rectangle[4]),
-        #                     (int(rectangle[0]), int(rectangle[1])),
-        #                     cv2.FONT_HERSHEY_SIMPLEX,
-        #                     0.5, (0, 255, 0))
+        cv2.putText(image, str(round(max(y_pred[0]), 2)), (bounding_box[0], bounding_box[1] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 
 cv2.imwrite("output.jpg", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
