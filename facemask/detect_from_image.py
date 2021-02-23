@@ -17,15 +17,20 @@ classification_model = load_classification_model("models/model1_300obs")
 
 img_with_dets = image.copy()
 min_conf = 0.9
+ind = 0
 for detection in detections:
     if detection['confidence'] >= min_conf:
         x, y, width, height = detection['box']
         print("Face found")
 
+        # corner_top_left = (x, y)
+        # corner_bottom_right = (x + height, y + height)
+        # height = int(round(height * 1.2, 0))
+        new_x = x - int(round(((height - width) / 2), 0))
+        face = img_with_dets[y:y + height, new_x:x + height]
+        cv2.imwrite(f"tmp_{ind}.jpg", cv2.cvtColor(face, cv2.COLOR_RGB2BGR))
+        ind += 1
 
-
-
-        face = img_with_dets[y:y + height, x:x + height]
         face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
         face = cv2.resize(face, (256, 256))
         face_norm = face / 255.0
