@@ -24,11 +24,23 @@ for detection in detections:
         x, y, width, height = detection['box']
         print("Face found")
 
-        # corner_top_left = (x, y)
-        # corner_bottom_right = (x + height, y + height)
-        # height = int(round(height * 1.2, 0))
-        new_x = x - int(round(((height - width) / 2), 0))
-        face = img_with_dets[y:y + height, new_x:x + height]
+        diff = 20
+        # squaring image
+        if height > width:
+            delta = int(round((height - width) / 2))
+            y_min = y - diff
+            y_max = y + height + diff
+            x_min = x - delta - diff
+            x_max = x + width + delta + diff
+        elif width > height:
+            delta = int(round((width - height) / 2))
+            y_min = y - delta - diff
+            y_max = y + height + delta + diff
+            x_min = x - diff
+            x_max = x + width + diff
+
+        face = img_with_dets[y_min:y_max, x_min:x_max]
+
         cv2.imwrite(f"tmp_{ind}.jpg", cv2.cvtColor(face, cv2.COLOR_RGB2BGR))
         ind += 1
 
@@ -63,8 +75,14 @@ for detection in detections:
             (bounding_box[0], bounding_box[1]),
               (bounding_box[0]+bounding_box[2], bounding_box[1] + bounding_box[3]),
               color,
-              2)
+              1)
         cv2.putText(image, str(round(max(y_pred[0]), 2)), (bounding_box[0], bounding_box[1] - 10),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+            cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 1)
+
+        cv2.rectangle(image,
+            (x_min, y_min),
+              (x_max, y_max),
+              (0,0,0),
+              1)
 
 cv2.imwrite("output.jpg", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
