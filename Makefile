@@ -1,6 +1,10 @@
 # ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
+PACKAGE_NAME=facemask
+FILENAME=trainer
+
+
 install_requirements:
 	@pip install -r requirements.txt
 
@@ -47,6 +51,8 @@ count_lines:
         '{printf "%4s %s\n", $$1, $$2}{s+=$$0}END{print s}'
 	@echo ''
 
+run_locally:
+	@python -m ${PACKAGE_NAME}.${FILENAME}
 # ----------------------------------
 #      UPLOAD PACKAGE TO PYPI
 # ----------------------------------
