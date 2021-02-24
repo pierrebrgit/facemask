@@ -8,6 +8,12 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
+tensorflow.keras
+cv2
+glob
+
+# visage detection models
+mtcnn
 
 # tests/linter
 black
