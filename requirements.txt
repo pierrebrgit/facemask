@@ -12,6 +12,11 @@ tensorflow.keras
 cv2
 glob
 
+
+# visage detection models
+mtcnn
+
+
 # tests/linter
 black
 coverage
