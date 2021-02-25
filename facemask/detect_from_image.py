@@ -22,7 +22,11 @@ end = time.time()
 print("(time) detect_faces(image):", end - start)
 
 start = time.time()
-classification_model = load_classification_model("models/model1_300obs")
+# classification_model = load_classification_model("models/model1_300obs")
+# classification_model = load_classification_model("../models/model2_600obs_multimasks")
+classification_model = load_classification_model("../models/model3_600obs_multimasks")
+
+
 end = time.time()
 print("(time) load_classification_model():", end - start)
 
@@ -50,13 +54,20 @@ for detection in detections:
             x_min = x - diff
             x_max = x + width + diff
 
-        face = img_with_dets[y_min:y_max, x_min:x_max]
+        # face = img_with_dets[y_min:y_max, x_min:x_max]
+        face = img_with_dets[y:y+height, x:x+width]
+
 
         cv2.imwrite(f"tmp_{ind}.jpg", cv2.cvtColor(face, cv2.COLOR_RGB2BGR))
         ind += 1
 
         face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-        face = cv2.resize(face, (256, 256))
+
+        # for model 1
+        # face = cv2.resize(face, (256, 256))
+        # for model 2 and 3
+        face = cv2.resize(face, (128, 128))
+
         face_norm = face / 255.0
         # print(face_norm.shape)
         # face_norm_exp = np.expand_dims(face_norm, axis=0)
