@@ -28,8 +28,8 @@ def main():
         sys.exit(1)
 
     model = tf.keras.models.load_model(model_path)
-    # tf.keras.models.save_model(model, save_format="h5")
-    model.save("ultra_model.h5")
+    tf.keras.models.save_model(model, "ultra_h5.h5", save_format="h5")
+    # model.save("ultra_model.h5")
 
 
 if __name__ == '__main__':
