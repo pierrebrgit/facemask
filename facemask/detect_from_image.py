@@ -24,7 +24,8 @@ print("(time) detect_faces(image):", end - start)
 start = time.time()
 # classification_model = load_classification_model("models/model1_300obs")
 # classification_model = load_classification_model("../models/model2_600obs_multimasks")
-classification_model = load_classification_model("../models/model3_600obs_multimasks")
+# classification_model = load_classification_model("../models/model3_600obs_multimasks")
+classification_model = load_classification_model("../models/model4_600obs_multimasks")
 
 
 end = time.time()
