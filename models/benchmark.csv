@@ -1,0 +1,15 @@
+model1_300obs,15.08%
+model2_600obs_multimasks,84.92%
+models/model3_600obs_multimasks,76.19%
+models/model3_600obs_multimasks,76.19%
+models/model4_600obs_multimasks,87.30%
+model5_600obs_multimasks_BandW,75.40%
+model6_600obs_multicolormasks_BandW,65.08%
+model7_1500obs_multicolormasks_BandW_largerpics,45.65%
+model8_900obs_monomask_BandW_largerpics,34.78%
+model9_450obs_256_multicolormasks_largerpics,57.61%
+model10_1200obs_256_multicolormasks,68.25%
+,
+model11_1800_128_multicolormasks,65.87%
+Dataset de test clean,
+model4_600obs_multimasks,92.31%
