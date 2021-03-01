@@ -1,0 +1,13 @@
+#imageResult{
+    position:absolute;
+    z-index:1;
+}
+
+#myContainer{
+    position:relative;
+}
+
+#myCanvas{
+    position:relative;
+    z-index:20;
+}

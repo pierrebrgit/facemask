@@ -30,6 +30,7 @@
 
     <!--====== Style CSS ======-->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
 
 </head>
 
@@ -71,7 +72,8 @@
                             <img src="assets/images/mask_icon.png" alt="Logo">
                         </a>
 
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTwo" aria-controls="navbarTwo" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTwo"
+                            aria-controls="navbarTwo" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="toggler-icon"></span>
                             <span class="toggler-icon"></span>
                             <span class="toggler-icon"></span>
@@ -105,7 +107,8 @@
                             <div class="col-lg-6">
                                 <div class="slider-content">
                                     <h1 class="title">Facemask detector</h1>
-                                    <p class="text">A responsible tool <b>for</b> responsible citizens <b>by</b> responsible citizens.</p>
+                                    <p class="text">A responsible tool <b>for</b> responsible citizens <b>by</b>
+                                        responsible citizens.</p>
                                     <ul class="slider-btn rounded-buttons">
                                         <li><a class="main-btn rounded-one" href="#services">UPLOAD</a></li>
                                         <li><a class="main-btn rounded-two" href="#">Webcam</a></li>
@@ -118,7 +121,8 @@
                     <div class="slider-image-box d-none d-lg-flex align-items-end">
                         <!--<div class="slider-image">
                             <img src="assets/images/slider/1.png" alt="Hero">
-                        </div> --><!-- slider-imgae -->
+                        </div> -->
+                        <!-- slider-imgae -->
                     </div><!-- slider-imgae box -->
                 </div> <!-- carousel-item -->
             </div>
@@ -138,25 +142,35 @@
                         <p class="text">Upload an image. We call the Police.</p>
                     </div> <!-- row -->
                     <div class="container py-5">
-                      <!-- For demo purpose -->
-                      <div class="row py-4">
-                          <div class="mx-auto">
+                        <!-- For demo purpose -->
+                        <div class="row py-4">
+                            <div class="mx-auto">
 
-                              <!-- Upload image input-->
-                              <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-                                  <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
-                                  <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
-                                  <div class="input-group-append">
-                                      <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
-                                  </div>
-                              </div>
+                                <!-- Upload image input-->
+                                <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                                    <input id="upload" type="file" onchange="readURL(this);"
+                                        class="form-control border-0">
+                                    <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose
+                                        file</label>
+                                    <div class="input-group-append">
+                                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
+                                                class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                                                class="text-uppercase font-weight-bold text-muted">Choose
+                                                file</small></label>
+                                    </div>
+                                </div>
 
-                              <!-- Uploaded image area-->
-                              <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+                                <!-- Uploaded image area-->
+                                <div id="myContainer" class="image-area mt-4">
+                                    <img id="imageResult" src="#" alt=""
+                                        class="img-fluid rounded shadow-sm mx-auto d-block">
+                                    <canvas id="myCanvas"></canvas>
+                                    <canvas id="canvas2"></canvas>
+                                </div>
 
-                          </div>
-                      </div>
-                  </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div> <!-- row -->
 
@@ -181,22 +195,22 @@
                 <div class="col-lg-12">
                     <div class="mt-30">
                         <div id="container-video">
-                          <video autoplay="true" id="videoElement">
+                            <video autoplay="true" id="videoElement">
 
-                          </video>
+                            </video>
                         </div>
                         <script>
-                          var video = document.querySelector("#videoElement");
+                            var video = document.querySelector("#videoElement");
 
-                          if (navigator.mediaDevices.getUserMedia) {
-                            navigator.mediaDevices.getUserMedia({ video: true })
-                              .then(function (stream) {
-                                video.srcObject = stream;
-                              })
-                              .catch(function (err0r) {
-                                console.log("Something went wrong!");
-                              });
-                          }
+                            if (navigator.mediaDevices.getUserMedia) {
+                                navigator.mediaDevices.getUserMedia({ video: true })
+                                    .then(function (stream) {
+                                        video.srcObject = stream;
+                                    })
+                                    .catch(function (err0r) {
+                                        console.log("Something went wrong!");
+                                    });
+                            }
                         </script>
                         <!-- <iframe id="gmap_canvas" src="https://maps.google.com/maps?q=Mission%20District%2C%20San%20Francisco%2C%20CA%2C%20USA&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe> -->
                     </div> <!-- row -->
@@ -204,6 +218,17 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
+
+
+
+
+
+
+
+
+
+
+
 
     <!--====== CONTACT PART ENDS ======-->
 
@@ -234,7 +259,7 @@
 
     <!--====== PART START ======-->
 
-<!--
+    <!--
     <section class="">
         <div class="container">
             <div class="row">
@@ -278,6 +303,11 @@
 
     <!--====== Main js ======-->
     <script src="assets/js/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+
+    <script src="assets/js/detection.js"></script>
 
 </body>
 
