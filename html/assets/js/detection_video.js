@@ -1,11 +1,23 @@
 async function setupCamera() {
   video = document.getElementById('videoElement');
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    'audio': false,
-    'video': { facingMode: 'user' },
-  });
-  video.srcObject = stream;
+  const constraints = {
+    audio: false,
+    video: true
+  };
+
+  function handleSuccess(stream) {
+    window.stream = stream; // make stream available to browser console
+    video.srcObject = stream;
+  }
+
+  function handleError(error) {
+    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+  }
+
+  const stream = await navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+  // video.srcObject = stream;
 
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
