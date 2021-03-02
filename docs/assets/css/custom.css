@@ -1,0 +1,23 @@
+#imageResult{
+    position:absolute;
+    z-index:1;
+}
+
+#myContainer{
+    position:relative;
+}
+
+#myCanvas{
+    position:relative;
+    z-index:20;
+}
+
+#container-video {
+    position: relative;
+}
+
+#videoCanvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
