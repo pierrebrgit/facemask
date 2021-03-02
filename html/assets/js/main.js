@@ -191,9 +191,6 @@ $(function () {
     });
 
 
-    //=====
-
-
 
 
 });
@@ -205,6 +202,6 @@ function readURL(input) {
             $('#imageResult').attr('src', e.target.result);
         };
         reader.readAsDataURL(input.files[0]);
-        main()
+        detect_image()
     }
 }
