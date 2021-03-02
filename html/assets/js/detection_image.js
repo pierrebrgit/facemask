@@ -2,7 +2,7 @@
 async function detect_image() {
 
   const detection_model = await blazeface.load();
-  const classification_model = await tf.loadLayersModel('/html/assets/classification_model/model.json');
+  const classification_model = await tf.loadLayersModel('/assets/classification_model/model.json');
   console.log(classification_model)
 
   const returnTensors = false; // Pass in `true` to get tensors back, rather than values.

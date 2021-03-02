@@ -142,7 +142,7 @@ const setupPage = async () => {
   ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
 
   model = await blazeface.load();
-  classification_model = await tf.loadLayersModel('/html/assets/classification_model/model.json');
+  classification_model = await tf.loadLayersModel('/assets/classification_model/model.json');
   console.log(classification_model)
 
   renderPrediction();
