@@ -1,3 +1,5 @@
+let model, classification_model,  ctx, videoWidth, videoHeight, video, canvas;
+
 async function setupCamera() {
   video = document.getElementById('videoElement');
 
@@ -27,11 +29,11 @@ async function setupCamera() {
 }
 
 const renderPrediction = async () => {
+  tf.engine().startScope()
   const returnTensors = false;
   const flipHorizontal = false;
   const annotateBoxes = false;
-  const predictions = await model.estimateFaces(
-    video, returnTensors, flipHorizontal, annotateBoxes);
+  const predictions = await model.estimateFaces(video, returnTensors, flipHorizontal, annotateBoxes);
 
   if (predictions.length > 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -62,33 +64,33 @@ const renderPrediction = async () => {
 
       const start = predictions[i].topLeft;
       const end = predictions[i].bottomRight;
-      x = start[0]
-      y = start[1]
-      width = start[0] - end[0]
-      height = start[1] - end[1]
-      diff = 0
+      const x = start[0]
+      const y = start[1]
+      const width = start[0] - end[0]
+      const height = start[1] - end[1]
+      const diff = 0
       if (height < width) {
-        delta = parseInt(Math.round((height - width) / 2))
-        y_min = y - diff - delta
-        y_max = y + height + diff
-        x_min = x - delta - diff
-        x_max = x + width + delta + diff
+        const delta = parseInt(Math.round((height - width) / 2))
+        const y_min = y - diff - delta
+        const y_max = y + height + diff
+        const x_min = x - delta - diff
+        const x_max = x + width + delta + diff
         width_ = x_min - x_max
-        width_delta = width_ / 3
-        height_delta = width_ / 10
+        const width_delta = width_ / 3
+        const height_delta = width_ / 10
         x_ = start[0] + delta + width_delta / 2
         y_ = start[1]
         width_ = width_ - width_delta
         height_ = y_min - y_max
       } else if (width < height) {
-        delta = parseInt(Math.round((width - height) / 2))
-        y_min = y - delta - diff
-        y_max = y + height + delta + diff
-        x_min = x - diff
-        x_max = x + width + diff
+        const delta = parseInt(Math.round((width - height) / 2))
+        const y_min = y - delta - diff
+        const y_max = y + height + delta + diff
+        const x_min = x - diff
+        const x_max = x + width + diff
         width_ = x_min - x_max
-        width_delta = width_ / 3
-        height_delta = width_ / 10
+        const width_delta = width_ / 3
+        const height_delta = width_ / 10
         x_ = start[0] + width_delta / 2
         y_ = start[1] + delta
         width_ = width_ - width_delta
@@ -96,21 +98,22 @@ const renderPrediction = async () => {
       }
       // console.log(width_)
       // console.log(height_)
-      img_width = video.width
-      img_height = video.height
+      const img_width = video.width
+      const img_height = video.height
 
-      x_normed = x_ / img_width
-      y_normed = y_ / img_height
-      width_normed = width_ / img_width
-      height_normed = height_ / img_height
+      const x_normed = x_ / img_width
+      const y_normed = y_ / img_height
+      const width_normed = width_ / img_width
+      const height_normed = height_ / img_height
 
       const img_tensor = tf.browser.fromPixels(video)
 
-      reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
-      resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
-      normed = resized.div(255.0)
-      prediction = classification_model.predict(normed).dataSync()
-      prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+      const reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
+      const resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
+      const normed = resized.div(255.0)
+      const prediction = classification_model.predict(normed).dataSync()
+      tf.dispose()
+      const prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
       // console.log(prediction)
       var color = ""
       var title = ""
@@ -134,16 +137,21 @@ const renderPrediction = async () => {
       ctx.fillText(title, x_ + 5, y_ - 5);
     }
   }
-
+  tf.engine().endScope()
   requestAnimationFrame(renderPrediction);
 };
 
+const state = {
+  backend: 'webgl'
+};
+
 const setupPage = async () => {
+  await tf.setBackend(state.backend);
   await setupCamera();
   video.play();
 
-  videoWidth = video.videoWidth;
-  videoHeight = video.videoHeight;
+  const videoWidth = video.videoWidth;
+  const videoHeight = video.videoHeight;
   video.width = videoWidth;
   video.height = videoHeight;
 
@@ -155,7 +163,7 @@ const setupPage = async () => {
 
   model = await blazeface.load();
   classification_model = await tf.loadLayersModel('https://pierrebrgit.github.io/facemask/html/assets/classification_model/model.json');
-  console.log(classification_model)
+  // console.log(classification_model)
 
   renderPrediction();
 };
