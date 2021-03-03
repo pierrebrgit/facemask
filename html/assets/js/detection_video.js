@@ -119,30 +119,22 @@ const renderPrediction = async () => {
       var title = ""
       if (prediction_class == 0) {
         color = "rgba(255, 0, 0, 1)"
-        title = "No mask"
+        title = "no mask"
       } else if (prediction_class == 1) {
-        color = "#2ecc71"
-        title = "OK mask"
+        color = "rgba(0, 255, 0, 1)"
+        title = "ok mask"
       } else {
         color = "rgba(255, 165, 0, 1)"
-        title = "Bad mask"
+        title = "bad mask"
       }
       title = title + " - " + prediction[prediction_class].toFixed(2);
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
       ctx.lineWidth = "2";
       ctx.strokeRect(x_, y_, width_, height_);
-
-      var width_title = ctx.measureText(title).width;
-
       ctx.fillStyle = color;
-      ctx.fillRect(x_ - 1, y_ - 17, width_title + 10, 17);
-
-      ctx.fillStyle = "#FFF";
-      ctx.font = "13px Helvetica";
+      ctx.font = "100 15px Helvetica";
       ctx.fillText(title, x_ + 5, y_ - 5);
-      // ctx.fillStyle = "#FFF";
-      // ctx.fillText("Mask", start[0]+3, start[1]-4,);
     }
   }
   tf.engine().endScope()
