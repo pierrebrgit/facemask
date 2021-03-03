@@ -69,33 +69,47 @@ const renderPrediction = async () => {
       const width = start[0] - end[0]
       const height = start[1] - end[1]
       const diff = 0
+
       if (height < width) {
+
+        // console.log("height < width")
+
         const delta = parseInt(Math.round((height - width) / 2))
         const y_min = y - diff - delta
         const y_max = y + height + diff
         const x_min = x - delta - diff
         const x_max = x + width + delta + diff
+
         width_ = x_min - x_max
+        height_ = y_min - y_max
         const width_delta = width_ / 3
-        const height_delta = width_ / 10
+        const height_delta = height_ / 5
+
         x_ = start[0] + delta + width_delta / 2
         y_ = start[1]
         width_ = width_ - width_delta
-        height_ = y_min - y_max
+        height_ = height_ - height_delta
+
       } else if (width < height) {
+
+        // console.log("width < height")
+
         const delta = parseInt(Math.round((width - height) / 2))
         const y_min = y - delta - diff
         const y_max = y + height + delta + diff
         const x_min = x - diff
         const x_max = x + width + diff
+
         width_ = x_min - x_max
         const width_delta = width_ / 3
-        const height_delta = width_ / 10
+
         x_ = start[0] + width_delta / 2
         y_ = start[1] + delta
         width_ = width_ - width_delta
         height_ = y_min - y_max
+
       }
+
       // console.log(width_)
       // console.log(height_)
       const img_width = video.width
@@ -174,11 +188,11 @@ const setupPage = async () => {
 };
 
 async function load_detection_model() {
-    detection_model_video = await blazeface.load();
+  detection_model_video = await blazeface.load();
 }
 
 async function load_classification_model() {
-    classification_model_video = await tf.loadLayersModel("https://pierrebrgit.github.io/facemask/html//assets/classification_model/model.json");
+  classification_model_video = await tf.loadLayersModel("https://pierrebrgit.github.io/facemask/html//assets/classification_model/model.json");
 }
 
 Promise.all([load_detection_model(), load_classification_model()]).then(setupPage);
