@@ -196,8 +196,9 @@ function readURL(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             $('#imageResult').attr('src', e.target.result);
+            detect_image();
         };
         reader.readAsDataURL(input.files[0]);
-        detect_image()
+        // detect_image()
     }
 }

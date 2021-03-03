@@ -1,4 +1,4 @@
-let model, classification_model,  ctx, videoWidth, videoHeight, video, canvas;
+let detection_model_video, classification_model_video, ctx, videoWidth, videoHeight, video, canvas;
 
 async function setupCamera() {
   video = document.getElementById('videoElement');
@@ -33,7 +33,7 @@ const renderPrediction = async () => {
   const returnTensors = false;
   const flipHorizontal = false;
   const annotateBoxes = false;
-  const predictions = await model.estimateFaces(video, returnTensors, flipHorizontal, annotateBoxes);
+  const predictions = await detection_model_video.estimateFaces(video, returnTensors, flipHorizontal, annotateBoxes);
 
   if (predictions.length > 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -111,7 +111,7 @@ const renderPrediction = async () => {
       const reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
       const resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
       const normed = resized.div(255.0)
-      const prediction = classification_model.predict(normed).dataSync()
+      const prediction = classification_model_video.predict(normed).dataSync()
       tf.dispose()
       const prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
       // console.log(prediction)
@@ -119,21 +119,26 @@ const renderPrediction = async () => {
       var title = ""
       if (prediction_class == 0) {
         color = "rgba(255, 0, 0, 1)"
-        title = "no mask"
+        title = "No mask"
       } else if (prediction_class == 1) {
-        color = "rgba(0, 255, 0, 1)"
-        title = "ok mask"
+        color = "#2ecc71"
+        title = "OK mask"
       } else {
         color = "rgba(255, 165, 0, 1)"
-        title = "bad mask"
+        title = "Bad mask"
       }
       title = title + " - " + prediction[prediction_class].toFixed(2);
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
       ctx.lineWidth = "2";
       ctx.strokeRect(x_, y_, width_, height_);
+
+      var width_title = ctx.measureText(title).width;
+
       ctx.fillStyle = color;
-      ctx.font = "100 15px Helvetica";
+      ctx.fillRect(x_ - 1, y_ - 17, width_title + 10, 17);
+      ctx.fillStyle = "#FFF";
+      ctx.font = "13px Helvetica";
       ctx.fillText(title, x_ + 5, y_ - 5);
     }
   }
@@ -146,7 +151,7 @@ const state = {
 };
 
 const setupPage = async () => {
-  await tf.setBackend(state.backend);
+  // await tf.setBackend(state.backend);
   await setupCamera();
   video.play();
 
@@ -161,11 +166,20 @@ const setupPage = async () => {
   ctx = canvas.getContext('2d');
   ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
 
-  model = await blazeface.load();
-  classification_model = await tf.loadLayersModel('https://pierrebrgit.github.io/facemask/html/assets/classification_model/model.json');
+  // detection_model_video = await blazeface.load();
+  // classification_model_video = await tf.loadLayersModel('/html/assets/classification_model/model.json');
   // console.log(classification_model)
 
   renderPrediction();
 };
 
-setupPage();
+async function load_detection_model() {
+    detection_model_video = await blazeface.load();
+}
+
+async function load_classification_model() {
+    classification_model_video = await tf.loadLayersModel('/html/assets/classification_model/model.json');
+}
+
+Promise.all([load_detection_model(), load_classification_model()]).then(setupPage);
+// setupPage();

@@ -81,8 +81,8 @@
 
                         <div class="collapse navbar-collapse sub-menu-bar" id="navbarTwo">
                             <ul class="navbar-nav m-auto">
-                                <li class="nav-item active"><a class="page-scroll" href="#home">home</a></li>
-                                <li class="nav-item"><a class="page-scroll" href="image.html">Image</a></li>
+                                <li class="nav-item active"><a class="page-scroll" href="index.html">home</a></li>
+                                <li class="nav-item"><a class="page-scroll" href="#">Image</a></li>
                                 <li class="nav-item"><a class="page-scroll" href="video.html">Video</a></li>
                                 <li class="nav-item"><a class="page-scroll" href="#pricing">Distancing</a></li>
                                 <li class="nav-item"><a class="page-scroll" href="#about">Recog</a></li>
@@ -98,36 +98,59 @@
 
     <!--====== SLIDER PART START ======-->
 
-    <section id="home" class="slider_area">
-        <div id="carouselThree" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="slider-content">
-                                    <h1 class="title">Facemask detector</h1>
-                                    <p class="text">A responsible tool</p>
-                                    <ul class="slider-btn rounded-buttons">
-                                        <li><a class="main-btn rounded-one" href="image.html">Image upload</a></li>
-                                        <li><a class="main-btn rounded-two" href="video.html">Webcam</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div> <!-- row -->
-                    </div> <!-- container -->
-                    <div class="slider-image-box d-none d-lg-flex align-items-end">
-                        <!--<div class="slider-image">
-                            <img src="assets/images/slider/1.png" alt="Hero">
-                        </div> -->
-                        <!-- slider-imgae -->
-                    </div><!-- slider-imgae box -->
-                </div> <!-- carousel-item -->
-            </div>
-        </div>
-    </section>
+
 
     <!--====== SLIDER PART ENDS ======-->
+
+    <!--====== IMAGE UPLOAD ======-->
+
+    <section id="services" class="features-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-10">
+                    <div class="section-title text-center pb-10">
+                        <h3 class="title">Image upload</h3>
+                        <p class="text">Upload an image. We call the Police.</p>
+                    </div> <!-- row -->
+                    <div class="container py-5">
+                        <!-- For demo purpose -->
+                        <div class="row py-4">
+                            <div class="mx-auto">
+
+                                <!-- Upload image input-->
+                                <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                                    <input id="upload" type="file" onchange="readURL(this);"
+                                        class="form-control border-0">
+                                    <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose
+                                        file</label>
+                                    <div class="input-group-append">
+                                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
+                                                class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                                                class="text-uppercase font-weight-bold text-muted">Choose
+                                                file</small></label>
+                                    </div>
+                                </div>
+
+                                <!-- Uploaded image area-->
+                                <div id="myContainer" class="image-area mt-4">
+                                    <img id="imageResult" src="#" alt=""
+                                        class="img-fluid rounded shadow-sm mx-auto d-block">
+                                    <canvas id="myCanvas"></canvas>
+                                    <!-- <canvas id="canvas2"></canvas> -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- row -->
+
+        </div> <!-- container -->
+    </section>
+
+    <!--====== FEATRES TWO PART ENDS ======-->
+
+    <!--====== CONTACT PART ENDS ======-->
 
     <!--====== FOOTER PART START ======-->
 
@@ -197,6 +220,11 @@
     <!--====== Scrolling Nav js ======-->
     <script src="assets/js/jquery.easing.min.js"></script>
     <script src="assets/js/scrolling-nav.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+
+    <script src="assets/js/detection_image.js"></script>
 
     <!--====== Main js ======-->
     <script src="assets/js/main.js"></script>

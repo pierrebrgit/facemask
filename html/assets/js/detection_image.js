@@ -1,14 +1,17 @@
 
 async function detect_image() {
-
-  const detection_model = await blazeface.load();
-  const classification_model = await tf.loadLayersModel('https://pierrebrgit.github.io/facemask/html/assets/classification_model/model.json');
-  console.log(classification_model)
+  console.log("detect_image()");
+  // await tf.setBackend(state.backend);
+  const detection_model_image = await blazeface.load();
+  const classification_model_image = await tf.loadLayersModel('/html/assets/classification_model/model.json');
+  // console.log(classification_model_ing)
 
   const returnTensors = false; // Pass in `true` to get tensors back, rather than values.
-  const predictions = await detection_model.estimateFaces(document.querySelector("#imageResult"), returnTensors);
+  console.log("Calling detection model");
+  const predictions = await detection_model_image.estimateFaces(document.querySelector("#imageResult"), returnTensors);
+  console.log("predictions done");
 
-  var img = document.getElementById('imageResult');
+  const img = document.getElementById('imageResult');
   var img_width = img.clientWidth;
   var img_height = img.clientHeight;
 
@@ -106,7 +109,7 @@ async function detect_image() {
       resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
       normed = resized.div(255.0)
 
-      prediction = classification_model.predict(normed).dataSync()
+      prediction = classification_model_image.predict(normed).dataSync()
       prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 
       console.log(prediction)
