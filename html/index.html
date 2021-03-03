@@ -152,7 +152,10 @@
                               </div>
 
                               <!-- Uploaded image area-->
-                              <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+                              <div class="image-area mt-4">
+                                <img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block">
+                                <canvas id="canvasOutput" style="position: absolute; top: 0; left: 0;"></canvas>
+                              </div>
 
                           </div>
                       </div>
@@ -171,7 +174,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-10">
-                    <div class="section-title text-center pb-30">
+                    <div id="no-webcam" class="section-title text-center pb-30">
                         <h3 class="title">Video</h3>
                         <p class="text">Turn on your webcam.</p>
                     </div> <!-- section title -->
@@ -184,8 +187,10 @@
                           <video autoplay="true" id="videoElement">
 
                           </video>
+                          <canvas id="videoCanvas"></canvas>
+                          <canvas2 id="videoCanvas2"></canvas2>
                         </div>
-                        <script>
+                        <!-- <script>
                           var video = document.querySelector("#videoElement");
 
                           if (navigator.mediaDevices.getUserMedia) {
@@ -197,10 +202,11 @@
                                 console.log("Something went wrong!");
                               });
                           }
-                        </script>
+                        </script> -->
                         <!-- <iframe id="gmap_canvas" src="https://maps.google.com/maps?q=Mission%20District%2C%20San%20Francisco%2C%20CA%2C%20USA&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe> -->
                     </div> <!-- row -->
                 </div>
+                <button id="predict">Predict</button>
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
@@ -276,8 +282,17 @@
     <script src="assets/js/jquery.easing.min.js"></script>
     <script src="assets/js/scrolling-nav.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+
     <!--====== Main js ======-->
     <script src="assets/js/main.js"></script>
+
+
+    <script src="assets/js/index.js"></script>
+
+    <!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>-->
+
 
 </body>
 
