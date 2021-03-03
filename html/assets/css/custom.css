@@ -1,11 +1,3 @@
-@media (min-width: 1200px){
-
-    .container {
-        width: 1280px !important;
-        max-width: 1280px !important;
-
-}
-
 #myContainer{
     position:relative;
 }
