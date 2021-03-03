@@ -189,10 +189,6 @@ $(function () {
             scrollTop: 0,
         }, 1500);
     });
-
-
-
-
 });
 
 function readURL(input) {
