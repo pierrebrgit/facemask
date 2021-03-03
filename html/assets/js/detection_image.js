@@ -60,33 +60,36 @@ async function detect_image() {
 
       if (height < width) {
 
-        delta = parseInt(Math.round((height - width) / 2))
-        y_min = y - diff - delta
-        y_max = y + height + diff
-        x_min = x - delta - diff
-        x_max = x + width + delta + diff
+        // console.log("height < width")
+
+        const delta = parseInt(Math.round((height - width) / 2))
+        const y_min = y - diff - delta
+        const y_max = y + height + diff
+        const x_min = x - delta - diff
+        const x_max = x + width + delta + diff
 
         width_ = x_min - x_max
-        width_delta = width_ / 3
-        height_delta = width_ / 10
+        height_ = y_min - y_max
+        const width_delta = width_ / 3
+        const height_delta = height_ / 4
 
         x_ = start[0] + delta + width_delta / 2
         y_ = start[1]
         width_ = width_ - width_delta
-        height_ = y_min - y_max
-
+        height_ = height_ - height_delta
 
       } else if (width < height) {
 
-        delta = parseInt(Math.round((width - height) / 2))
-        y_min = y - delta - diff
-        y_max = y + height + delta + diff
-        x_min = x - diff
-        x_max = x + width + diff
+        // console.log("width < height")
+
+        const delta = parseInt(Math.round((width - height) / 2))
+        const y_min = y - delta - diff
+        const y_max = y + height + delta + diff
+        const x_min = x - diff
+        const x_max = x + width + diff
 
         width_ = x_min - x_max
-        width_delta = width_ / 3
-        height_delta = width_ / 10
+        const width_delta = width_ / 3
 
         x_ = start[0] + width_delta / 2
         y_ = start[1] + delta
