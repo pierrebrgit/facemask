@@ -1,6 +1,6 @@
-.container, .col-lg-12{
+/* .container, .col-lg-12{
     padding: 0px !important
-}
+} */
 
 #myContainer{
     position:relative;
@@ -22,13 +22,13 @@
 }
 
 #videoElement{
-    width: 100%;
+    /* width: 100%; */
     position:absolute;
     z-index:1;
 }
 
 #videoCanvas {
-    width: 100%;
+    /* width: 100%; */
     position: relative;
     z-index:20;
 }

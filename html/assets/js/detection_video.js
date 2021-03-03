@@ -175,14 +175,11 @@ const setupPage = async () => {
   video.height = videoHeight;
 
 
+  // containers = document.getElementsByClassName("container");
 
-  containers = document.getElementsByClassName("container");
-
-  for (i = 0; i < containers.length; i++) {
-    containers[i].setAttribute("width", videoWidth);
-  }
-
-
+  // for (i = 0; i < containers.length; i++) {
+  //   containers[i].setAttribute("width", videoWidth);
+  // }
 
 
   canvas = document.getElementById('videoCanvas');
