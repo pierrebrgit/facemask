@@ -174,7 +174,12 @@ const setupPage = async () => {
   video.width = videoWidth;
   video.height = videoHeight;
 
+
+
   canvas = document.getElementById('videoCanvas');
+  canvas.setAttribute("width", videoWidth);
+  canvas.setAttribute("height", videoHeight);
+
   canvas.width = videoWidth;
   canvas.height = videoHeight;
   ctx = canvas.getContext('2d');
