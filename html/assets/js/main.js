@@ -1,21 +1,10 @@
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-          $('#imageResult').attr('src', e.target.result);
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-$(function() {
+$(function () {
 
     "use strict";
 
     //===== Prealoder
 
-    $(window).on('load', function(event) {
+    $(window).on('load', function (event) {
         $('.preloader').delay(500).fadeOut(500);
     });
 
@@ -36,8 +25,8 @@ $(function() {
 
     //===== Section Menu Active
 
-    var scrollLink = $('.page-scroll');
-    // Active link switching
+    // var scrollLink = $('.page-scroll');
+    // // Active link switching
     // $(window).scroll(function () {
     //     var scrollbarLocation = $(this).scrollTop();
 
@@ -155,7 +144,7 @@ $(function() {
         prevArrow: '<span class="prev"><i class="lni lni-arrow-left"></i></span>',
         nextArrow: '<span class="next"><i class="lni lni-arrow-right"></i></span>',
         infinite: true,
-       autoplay: true,
+        autoplay: true,
         autoplaySpeed: 5000,
         speed: 800,
         slidesToShow: 1,
@@ -173,48 +162,42 @@ $(function() {
     //===== Magnific Popup
 
     $('.image-popup').magnificPopup({
-      type: 'image',
-      gallery:{
-        enabled:true
-      }
+        type: 'image',
+        gallery: {
+            enabled: true
+        }
     });
 
 
     //===== Back to top
 
     // Show or hide the sticky footer button
-    $(window).on('scroll', function(event) {
-        if($(this).scrollTop() > 600){
+    $(window).on('scroll', function (event) {
+        if ($(this).scrollTop() > 600) {
             $('.back-to-top').fadeIn(200)
-        } else{
+        } else {
             $('.back-to-top').fadeOut(200)
         }
     });
 
 
     //Animate the scroll to yop
-    $('.back-to-top').on('click', function(event) {
+    $('.back-to-top').on('click', function (event) {
         event.preventDefault();
 
         $('html, body').animate({
             scrollTop: 0,
         }, 1500);
     });
-
-    $('#upload').on('change', function () {
-        readURL(input);
-    });
-
-
-    //=====
 });
 
-var input = document.getElementById( 'upload' );
-var infoArea = document.getElementById( 'upload-label' );
-
-input.addEventListener( 'change', showFileName );
-function showFileName( event ) {
-  var input = event.srcElement;
-  var fileName = input.files[0].name;
-  infoArea.textContent = 'File name: ' + fileName;
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#imageResult').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+        detect_image()
+    }
 }
