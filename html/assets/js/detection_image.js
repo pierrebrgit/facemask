@@ -48,15 +48,18 @@ async function detect_image() {
 
     for (let i = 0; i < predictions.length; i++) {
 
+      if (returnTensors) {
+        predictions[i].topLeft = predictions[i].topLeft.arraySync();
+        predictions[i].bottomRight = predictions[i].bottomRight.arraySync();
+      }
+
       const start = predictions[i].topLeft;
       const end = predictions[i].bottomRight;
-
-      x = start[0]
-      y = start[1]
-      width = start[0] - end[0]
-      height = start[1] - end[1]
-
-      diff = 0
+      const x = start[0]
+      const y = start[1]
+      const width = start[0] - end[0]
+      const height = start[1] - end[1]
+      const diff = 0
 
       if (height < width) {
 
@@ -71,7 +74,7 @@ async function detect_image() {
         width_ = x_min - x_max
         height_ = y_min - y_max
         const width_delta = width_ / 3
-        const height_delta = height_ / 4
+        const height_delta = height_ / 5
 
         x_ = start[0] + delta + width_delta / 2
         y_ = start[1]
@@ -102,48 +105,46 @@ async function detect_image() {
       // console.log(height_)
 
 
-      x_normed = x_ / img_width
-      y_normed = y_ / img_height
-      width_normed = width_ / img_width
-      height_normed = height_ / img_height
+      const x_normed = x_ / img_width
+      const y_normed = y_ / img_height
+      const width_normed = width_ / img_width
+      const height_normed = height_ / img_height
 
 
-      reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
-      resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
-      normed = resized.div(255.0)
+      const reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
+      const resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
+      const normed = resized.div(255.0)
 
-      prediction = classification_model_image.predict(normed).dataSync()
-      prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-
-      console.log(prediction)
-
+      const prediction = classification_model_image.predict(normed).dataSync()
+      const prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 
       var color = ""
       var title = ""
 
       if (prediction_class == 0) {
         color = "rgba(255, 0, 0, 1)"
-        title = "no mask"
+        title = "No mask"
       } else if (prediction_class == 1) {
-        color = "rgba(0, 255, 0, 1)"
-        title = "ok mask"
+        color = "#2ecc71"
+        title = "OK mask"
       } else {
         color = "rgba(255, 165, 0, 1)"
-        title = "bad mask"
+        title = "Bad mask"
       }
 
-
       title = title + " - " + prediction[prediction_class].toFixed(2);
-
       ctx_img.strokeStyle = color;
       ctx_img.fillStyle = color;
       ctx_img.lineWidth = "2";
       ctx_img.strokeRect(x_, y_, width_, height_);
 
-      ctx_img.fillStyle = color;
-      ctx_img.font = "100 15px Helvetica";
-      ctx_img.fillText(title, x_ + 5, y_ - 5);
+      var width_title = ctx_img.measureText(title).width;
 
+      ctx_img.fillStyle = color;
+      ctx_img.fillRect(x_ - 1, y_ - 17, width_title + 10, 17);
+      ctx_img.fillStyle = "#FFF";
+      ctx_img.font = "13px Helvetica";
+      ctx_img.fillText(title, x_ + 5, y_ - 5);
 
       // canvas2 = document.getElementById('canvas2');
       // canvas2.width = 128;
