@@ -152,13 +152,13 @@ print(people_coord)
 for person1 in range(counter):
     for person2 in range(counter):
         if person2 != person1:
-            x0_1=min(detections[person1]['keypoints']['nose'][0],detections[person2]['keypoints']['nose'][0])
+            x0_1=(detections[person1]['keypoints']['nose'][0]+detections[person2]['keypoints']['nose'][0])/2
             x1=detections[person1]['keypoints']['nose'][0]
             y1=detections[person1]['keypoints']['nose'][1]
             x2=detections[person2]['keypoints']['nose'][0]
             y2=detections[person2]['keypoints']['nose'][1]        
-            if social_dist_array[person1][person2] <= 200 and social_dist_array[person1][person2] != 0:
-                cv2.putText(image, f"Distance {round(social_dist_array[person1][person2]/100,2)}m", (int(x0_1+offset/8),int((y1+y2)/2)+offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color_wrong, 1)
+            if social_dist_array[person1][person2] <= 100 and social_dist_array[person1][person2] != 0:
+                cv2.putText(image, f"{round(social_dist_array[person1][person2]/100,2)}m", (int(x0_1-offset/8),int((y1+y2)/2)+1.2*offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color_wrong, 1)
                 cv2.line(image,(x1,y1+offset),(x2,y2+offset), (200,0,0), 1)
                 cv2.line(image,(x1,int(y1+0.90*offset)), (x1,int(y1+1.10*offset)), (200,0,0), 1)
                 cv2.line(image,(x2,int(y2+0.90*offset)), (x2,int(y2+1.10*offset)), (200,0,0), 1)
