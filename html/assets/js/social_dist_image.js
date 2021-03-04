@@ -2,7 +2,7 @@ async function distanciation_social_mask() {
     console.log("detect_image()");
     // await tf.setBackend(state.backend);
     const detection_model_image = await blazeface.load();
-    const classification_model_image = await tf.loadLayersModel('/html/assets/classification_model/model.json');
+    const classification_model_image = await tf.loadLayersModel("https://pierrebrgit.github.io/facemask/html//assets/classification_model/model.json");
     // console.log(classification_model_ing)
   
     const returnTensors = false; // Pass in `true` to get tensors back, rather than values.
@@ -24,36 +24,17 @@ async function distanciation_social_mask() {
   
   
     if (predictions.length > 0) {
-  
-      /*
-      `predictions` is an array of objects describing each detected face, for example:
-  
-      [
-        {
-          topLeft: [232.28, 145.26],
-          bottomRight: [449.75, 308.36],
-          probability: [0.998],
-          landmarks: [
-            [295.13, 177.64], // right eye
-            [382.32, 175.56], // left eye
-            [341.18, 205.03], // nose
-            [345.12, 250.61], // mouth
-            [252.76, 211.37], // right ear
-            [431.20, 204.93] // left ear
-          ]
-        }
-      ]
-      */
-  
+    
       /* constants for socialdistanciation */ 
       const focal = 1.18 ;/* pixels */ 
       const mean_dim_face = 24.65;    // mean between women and men
-      var people_coord = Array(predictions.length);
-      var social_dist_array = Array(predictions.length).fill().map(() => Array(predictions.length).fill(0));
-      var counter = 1 ;
-      const color_wrong = "rgba(255, 0, 0, 1)" ;
+      var people_coord = [];
+      var social_dist_array = Array(predictions.length).fill().map(() => Array(predictions.length).fill(0.0)); 
+      var counter = 0 ;
       const pixels_face = predictions[0].bottomRight[1]-predictions[0].topLeft[1] ;
       const ratio_pix_cm= (0.8*mean_dim_face)/pixels_face ;
+      // var offset = 0.5 * parseInt(predictions[0].bottomRight[0]-predictions[0].topLeft[0]);
+      var offset = 0.15 * img_height
       
       for (let i = 0; i < predictions.length; i++) {
   
@@ -68,34 +49,37 @@ async function distanciation_social_mask() {
         diff = 0
   
         if (height < width) {
+
+          // console.log("height < width")
   
-          delta = parseInt(Math.round((height - width) / 2))
-          y_min = y - diff - delta
-          y_max = y + height + diff
-          x_min = x - delta - diff
-          x_max = x + width + delta + diff
+          const delta = parseInt(Math.round((height - width) / 2))
+          const y_min = y - diff - delta
+          const y_max = y + height + diff
+          const x_min = x - delta - diff
+          const x_max = x + width + delta + diff
   
           width_ = x_min - x_max
-          width_delta = width_ / 3
-          height_delta = width_ / 10
+          height_ = y_min - y_max
+          const width_delta = width_ / 3
+          const height_delta = height_ / 5
   
           x_ = start[0] + delta + width_delta / 2
           y_ = start[1]
           width_ = width_ - width_delta
-          height_ = y_min - y_max
-  
+          height_ = height_ - height_delta
   
         } else if (width < height) {
   
-          delta = parseInt(Math.round((width - height) / 2))
-          y_min = y - delta - diff
-          y_max = y + height + delta + diff
-          x_min = x - diff
-          x_max = x + width + diff
+          // console.log("width < height")
+  
+          const delta = parseInt(Math.round((width - height) / 2))
+          const y_min = y - delta - diff
+          const y_max = y + height + delta + diff
+          const x_min = x - diff
+          const x_max = x + width + diff
   
           width_ = x_min - x_max
-          width_delta = width_ / 3
-          height_delta = width_ / 10
+          const width_delta = width_ / 3
   
           x_ = start[0] + width_delta / 2
           y_ = start[1] + delta
@@ -104,58 +88,50 @@ async function distanciation_social_mask() {
   
         }
   
+        // console.log(width_)
+        // console.log(height_)
+        const img_width = img.width
+        const img_height = img.height
   
+        const x_normed = x_ / img_width
+        const y_normed = y_ / img_height
+        const width_normed = width_ / img_width
+        const height_normed = height_ / img_height
   
-        x_normed = x_ / img_width
-        y_normed = y_ / img_height
-        width_normed = width_ / img_width
-        height_normed = height_ / img_height
+        const img_tensor = tf.browser.fromPixels(img)
   
-  
-        reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
-        resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
-        normed = resized.div(255.0)
-  
-        prediction = classification_model_image.predict(normed).dataSync()
-        prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-  
-        console.log(prediction)
-  
-  
+        const reshaped = img_tensor.reshape([1, Math.floor(img_height), Math.floor(img_width), 3])
+        const resized = tf.image.cropAndResize(reshaped, [[y_normed, x_normed, y_normed + height_normed, x_normed + width_normed]], [0], [128, 128])
+        const normed = resized.div(255.0)
+        const prediction = classification_model_image.predict(normed).dataSync()
+        tf.dispose()
+        const prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+        // console.log(prediction)
         var color = ""
         var title = ""
-  
         if (prediction_class == 0) {
           color = "rgba(255, 0, 0, 1)"
-          title = "no mask"
+          title = "No mask"
         } else if (prediction_class == 1) {
-          color = "rgba(0, 255, 0, 1)"
-          title = "ok mask"
+          color = "#2ecc71"
+          title = "OK mask"
         } else {
           color = "rgba(255, 165, 0, 1)"
-          title = "bad mask"
+          title = "Bad mask"
         }
-  
-  
         title = title + " - " + prediction[prediction_class].toFixed(2);
-  
         ctx_img_2.strokeStyle = color;
         ctx_img_2.fillStyle = color;
         ctx_img_2.lineWidth = "2";
         ctx_img_2.strokeRect(x_, y_, width_, height_);
   
+        var width_title = ctx_img_2.measureText(title).width;
+  
         ctx_img_2.fillStyle = color;
-        ctx_img_2.font = "100 15px Helvetica";
+        ctx_img_2.fillRect(x_ - 1, y_ - 17, width_title + 10, 17);
+        ctx_img_2.fillStyle = "#FFF";
+        ctx_img_2.font = "13px Helvetica";
         ctx_img_2.fillText(title, x_ + 5, y_ - 5);
-  
-        
-  
-  
-        // canvas2 = document.getElementById('canvas2');
-        // canvas2.width = 128;
-        // canvas2.height = 128;
-        // final = tf.squeeze(normed)
-        // pixel = tf.browser.toPixels(final, canvas2)
         
         let pixels_face_temp = predictions[i].bottomRight[1]-predictions[i].topLeft[1]
         let ratio_pix_cm_temp= (0.8*mean_dim_face)/pixels_face_temp
@@ -167,14 +143,47 @@ async function distanciation_social_mask() {
         counter++
       }
     }
-    console.log(people_coord)
-  
-    for (let person1 = 0; person1 < counter; person1++) {
-      for (let person2 = 0; person2 < counter; person2++) {
-        if (person2 != person1) {
-          social_dist_array[person1][person2] = Math.sqrt((people_coord[person1][0]-people_coord[person2][0])**2+(people_coord[person1][1]-people_coord[person2][1])**2+(people_coord[person1][2]-people_coord[person2][2])**2)
+      for (let person1 = 0; person1 < counter; person1++) {
+        for (let person2 = 0; person2 < counter; person2++) {
+          if (person2 !== person1) {
+            social_dist_array[person1][person2] = Math.sqrt((people_coord[person1][0]-people_coord[person2][0])**2+(people_coord[person1][1]-people_coord[person2][1])**2+(people_coord[person1][2]-people_coord[person2][2])**2)
+          }
+        }
+      }
+      for (let person1 = 0; person1 < counter; person1++) {
+        for (let person2 = 0; person2 < counter; person2++) {
+          if (person2 !== person1) {
+            
+            var x0_1=(predictions[person1].landmarks[2][0]+predictions[person2].landmarks[2][0])/2;
+            const x1=predictions[person1].landmarks[2][0];
+            const y1=predictions[person1].landmarks[2][1];
+            const x2=predictions[person2].landmarks[2][0];
+            const y2=predictions[person2].landmarks[2][1];
+            
+            if (social_dist_array[person1][person2] <= 100 && social_dist_array[person1][person2] != 0) {
+              ctx_img_2.fillStyle = "rgba(255, 0, 0, 1)";
+              ctx_img_2.beginPath();
+              ctx_img_2.moveTo(x1,y1+offset);
+              ctx_img_2.lineTo(x2,y2+offset);
+              ctx_img_2.stroke();
+              ctx_img_2.beginPath();
+              ctx_img_2.moveTo(x1,parseInt(y1+offset-0.01*img_height));
+              ctx_img_2.lineTo(x1,parseInt(y1+offset+0.01*img_height));
+              ctx_img_2.stroke();
+              ctx_img_2.beginPath();
+              ctx_img_2.moveTo(x2,parseInt(y2+offset+0.01*img_height));
+              ctx_img_2.lineTo(x2,parseInt(y2+offset-0.01*img_height));
+              ctx_img_2.stroke();
+              title = Math.round(social_dist_array[person1][person2]) / 100 + "m"
+              var width_title = ctx_img_2.measureText(title).width;
+              ctx_img_2.fillStyle = color;
+              ctx_img_2.fillRect(parseInt((x1+x2)/2)-5,parseInt((y1+offset+y2+offset)/2)-13, width_title + 10, 17);
+              ctx_img_2.fillStyle = "#FFF";
+              ctx_img_2.fillText(title, parseInt((x1+x2)/2),parseInt((y1+offset+y2+offset)/2));
+              // offset=parseInt(1.5*offset)
+              social_dist_array[person2][person1] = 9999.0
+          }
         }
       }
     }
   }
-  
