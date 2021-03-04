@@ -215,3 +215,15 @@ function readURL_social(input) {
         // detect_image()
     }
 }
+
+function readURL_social_video(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#imageResult').attr('src', e.target.result);
+            distanciation_social_mask_video();
+        };
+        reader.readAsDataURL(input.files[0]);
+        // detect_image()
+    }
+}
