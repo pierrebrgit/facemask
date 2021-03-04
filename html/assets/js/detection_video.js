@@ -227,7 +227,9 @@ function capture() {
   const predictions = videoCanvas.data
   predictions.forEach((prediction,index) => {
     if (prediction[4] === 0) {
-      canvas.getContext('2d').drawImage(video, prediction[0], prediction[1], prediction[2], prediction[3], index*50, 0, 50, 70);
+      var height_preview = prediction[3]
+      var width_preview = prediction[2]
+      canvas.getContext('2d').drawImage(video, prediction[0]-0.5*width_preview, prediction[1]-0.25*height_preview, 2*width_preview, 1.5*height_preview, index*100, 0, 100, 140);
     }
   })
 }
