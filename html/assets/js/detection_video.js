@@ -204,5 +204,6 @@ async function load_classification_model() {
   classification_model_video = await tf.loadLayersModel("https://pierrebrgit.github.io/facemask/html//assets/classification_model/model.json");
 }
 
+
 Promise.all([load_detection_model(), load_classification_model()]).then(setupPage);
 // setupPage();

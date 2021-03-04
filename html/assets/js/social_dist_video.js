@@ -1,4 +1,10 @@
-let detection_model_video, classification_model_video, ctx_img3, videoWidth, videoHeight, video, canvas;
+let detection_model_video, classification_model_video, ctx_img3, ctx_img_4, videoWidth, videoHeight, video, canvas;
+
+var max_dist = document.getElementById('dist_mand');
+
+function updateTextInput(val) {
+  document.getElementById('textInput').value=val; 
+}
 
 async function setupCamera() {
   video = document.getElementById('videoElement');
@@ -41,7 +47,7 @@ const renderPrediction = async () => {
 
     
     /* constants for socialdistanciation */ 
-    const focal = 1.18 ;/* pixels */ 
+    const focal = 550 ;/* pixels */ 
     const mean_dim_face = 24.65;    // mean between women and men
     var people_coord = [];
     var social_dist_array = Array(predictions.length).fill().map(() => Array(predictions.length).fill(0.0)); 
@@ -185,41 +191,44 @@ const renderPrediction = async () => {
         }
       }
     }
+    
     for (let person1 = 0; person1 < counter; person1++) {
-      for (let person2 = 0; person2 < counter; person2++) {
-        if (person2 !== person1) {
+      for (let person2 = person1+1; person2 < counter; person2++) {
           
           var x0_1=(predictions[person1].landmarks[2][0]+predictions[person2].landmarks[2][0])/2;
           const x1=predictions[person1].landmarks[2][0];
           const y1=predictions[person1].landmarks[2][1];
           const x2=predictions[person2].landmarks[2][0];
           const y2=predictions[person2].landmarks[2][1];
-          if (social_dist_array[person1][person2] <= 50 && social_dist_array[person1][person2] != 0) {
+          if (social_dist_array[person1][person2] <= 100*max_dist.value ) {
+            // ctx_img_4.fillStyle = "rgba(255, 0, 0, 1)";
+            ctx_img_4 = canvas.getContext('2d');
+            ctx_img_4.strokeStyle = "rgba(255, 0, 0, 1)";
             ctx_img_4.fillStyle = "rgba(255, 0, 0, 1)";
             ctx_img_4.beginPath();
             ctx_img_4.moveTo(x1,y1+offset);
             ctx_img_4.lineTo(x2,y2+offset);
             ctx_img_4.stroke();
-            ctx_img_4.fillStyle = "rgba(255, 0, 0, 1)";
+
             ctx_img_4.beginPath();
             ctx_img_4.moveTo(x1,parseInt(y1+offset-0.01*img_height));
             ctx_img_4.lineTo(x1,parseInt(y1+offset+0.01*img_height));
             ctx_img_4.stroke();
             ctx_img_4.beginPath();
-            ctx_img_4.fillStyle = "rgba(255, 0, 0, 1)";
+
             ctx_img_4.moveTo(x2,parseInt(y2+offset+0.01*img_height));
             ctx_img_4.lineTo(x2,parseInt(y2+offset-0.01*img_height));
             ctx_img_4.stroke();
             title = Math.round(social_dist_array[person1][person2]) / 100 + "m"
             var width_title = ctx_img_4.measureText(title).width;
-            ctx_img_4.fillStyle = "rgba(255, 0, 0, 1)";
+
             ctx_img_4.fillRect(parseInt((x1+x2)/2)-5,parseInt((y1+offset+y2+offset)/2)-13, width_title + 10, 17);
             ctx_img_4.fillStyle = "#FFF";
             ctx_img_4.fillText(title, parseInt((x1+x2)/2),parseInt((y1+offset+y2+offset)/2));
             // offset=parseInt(1.5*offset)
             social_dist_array[person2][person1] = 9999.0
           }
-        }
+        
       }
     }
 
@@ -258,7 +267,7 @@ const setupPage = async () => {
   canvas.width = videoWidth;
   canvas.height = videoHeight;
   ctx_img_3 = canvas.getContext('2d');
-  ctx_img_4= canvas.getContext('2d');
+
   ctx_img_3.fillStyle = "rgba(255, 0, 0, 0.5)";
 
 

@@ -36,6 +36,7 @@ body {
 img {
   max-width: 100%; }
 
+
 a:focus,
 input:focus,
 textarea:focus,
@@ -205,6 +206,7 @@ p {
       -moz-animation: ytp-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
       -o-animation: ytp-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
       animation: ytp-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
+
 
 /* Preloader Animations */
 @-webkit-keyframes ytp-spinner-linspin {
@@ -2231,7 +2233,7 @@ p {
         line-height: 24px;
         font-weight: 700;
         padding: 26px 0;
-        color: #fff;
+        color: #12121248;
         text-transform: uppercase;
         position: relative;
         opacity: 0.8;
@@ -2279,7 +2281,7 @@ p {
               display: none; } }
       .navbar-area .navbar .navbar-nav .nav-item.active > a, .navbar-area .navbar .navbar-nav .nav-item:hover > a {
         opacity: 1;
-        color: #fff; }
+        color: #121212; }
         @media only screen and (min-width: 768px) and (max-width: 991px) {
           .navbar-area .navbar .navbar-nav .nav-item.active > a, .navbar-area .navbar .navbar-nav .nav-item:hover > a {
             color: #121212; } }
