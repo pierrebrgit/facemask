@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--====== Favicon Icon ======-->
-    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="assets/images/Mask-icon-on-transparent-background-PNG.png" type="image/png">
 
     <!--====== Magnific Popup CSS ======-->
     <link rel="stylesheet" href="assets/css/magnific-popup.css">
@@ -69,7 +69,7 @@
                     <nav class="navbar navbar-expand-lg">
 
                         <a class="navbar-brand" href="#">
-                            <img src="assets/images/mask_icon.png" alt="Logo">
+                            <img src="assets/images/Mask-icon-on-transparent-background-PNG.png" alt="Logo">
                         </a>
 
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTwo"
@@ -109,11 +109,17 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="mt-30">
-                        <div id="container-video">
-                            <video playsinline autoplay id="videoElement"></video>
-                            <canvas id="videoCanvas"></canvas>
+                <div class="row justify-content-center"></div>
+                    <div class="col-lg-12">
+                        <div class="mt-30">
+                            <div id="container-video">
+                                <video playsinline autoplay id="videoElement"></video>
+                                <canvas id="videoCanvas"></canvas>
+                                <div>
+                                <button type="button" class="btn btn-secondary btn-lg" onclick="capture()">Capture</button>
+                                <canvas id="canvas" style="overflow:auto"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,7 +135,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="footer-logo text-center">
-                        <a class="mt-30" href="index.html"><img src="assets/images/mask_icon.png" alt="Logo"></a>
+                        <a class="mt-30" href="index.html"><img src="assets/images/Mask-icon-on-transparent-background-PNG.png" alt="Logo"></a>
                     </div> <!-- footer logo -->
                     <div class="copyright text-center mt-35">
                         <p class="text">Facemask</p>
