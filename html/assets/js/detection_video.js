@@ -28,6 +28,56 @@ async function setupCamera() {
   });
 }
 
+const preprocessPrediction = (prediction) => {
+  const start = prediction.topLeft;
+  const end = prediction.bottomRight;
+  x = start[0]
+  y = start[1]
+  width = start[0] - end[0]
+  height = start[1] - end[1]
+  diff = 0
+
+  if (height < width) {
+
+    // console.log("height < width")
+
+    const delta = parseInt(Math.round((height - width) / 2))
+    const y_min = y - diff - delta
+    const y_max = y + height + diff
+    const x_min = x - delta - diff
+    const x_max = x + width + delta + diff
+
+    let width_ = x_min - x_max
+    let height_ = y_min - y_max
+    const width_delta = width_ / 3
+    const height_delta = height_ / 5
+
+    const x_ = start[0] + delta + width_delta / 2
+    const y_ = start[1]
+    width_ = width_ - width_delta
+    height_ = height_ - height_delta
+    return [x_, y_, width_, height_]
+  } else if (width < height) {
+
+    // console.log("width < height")
+
+    const delta = parseInt(Math.round((width - height) / 2))
+    const y_min = y - delta - diff
+    const y_max = y + height + delta + diff
+    const x_min = x - diff
+    const x_max = x + width + diff
+
+    let width_ = x_min - x_max
+    const width_delta = width_ / 3
+
+    const x_ = start[0] + width_delta / 2
+    const y_ = start[1] + delta
+    width_ = width_ - width_delta
+    const height_ = y_min - y_max
+    return [x_, y_, width_, height_]
+  }
+}
+
 const renderPrediction = async () => {
   tf.engine().startScope()
   const returnTensors = false;
@@ -62,56 +112,14 @@ const renderPrediction = async () => {
       // ctx.fillStyle = "#FFF";
       // ctx.fillText("Mask", start[0]+3, start[1]-4,);
 
-      const start = predictions[i].topLeft;
-      const end = predictions[i].bottomRight;
-      const x = start[0]
-      const y = start[1]
-      const width = start[0] - end[0]
-      const height = start[1] - end[1]
-      const diff = 0
 
-      if (height < width) {
-
-        // console.log("height < width")
-
-        const delta = parseInt(Math.round((height - width) / 2))
-        const y_min = y - diff - delta
-        const y_max = y + height + diff
-        const x_min = x - delta - diff
-        const x_max = x + width + delta + diff
-
-        width_ = x_min - x_max
-        height_ = y_min - y_max
-        const width_delta = width_ / 3
-        const height_delta = height_ / 5
-
-        x_ = start[0] + delta + width_delta / 2
-        y_ = start[1]
-        width_ = width_ - width_delta
-        height_ = height_ - height_delta
-
-      } else if (width < height) {
-
-        // console.log("width < height")
-
-        const delta = parseInt(Math.round((width - height) / 2))
-        const y_min = y - delta - diff
-        const y_max = y + height + delta + diff
-        const x_min = x - diff
-        const x_max = x + width + diff
-
-        width_ = x_min - x_max
-        const width_delta = width_ / 3
-
-        x_ = start[0] + width_delta / 2
-        y_ = start[1] + delta
-        width_ = width_ - width_delta
-        height_ = y_min - y_max
-
-      }
 
       // console.log(width_)
       // console.log(height_)
+
+      let x_, y_, width_, height_
+      [x_, y_, width_, height_] = preprocessPrediction(predictions[i]);
+
       const img_width = video.width
       const img_height = video.height
 
@@ -127,7 +135,8 @@ const renderPrediction = async () => {
       const normed = resized.div(255.0)
       const prediction = classification_model_video.predict(normed).dataSync()
       tf.dispose()
-      const prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+      prediction_class = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+      predictions[i].predictionClass = prediction_class
       // console.log(prediction)
       var color = ""
       var title = ""
@@ -155,6 +164,7 @@ const renderPrediction = async () => {
       ctx.font = "13px Helvetica";
       ctx.fillText(title, x_ + 5, y_ - 5);
     }
+    canvas.data = predictions.map((prediction) => preprocessPrediction(prediction).concat([prediction.predictionClass]))
   }
   tf.engine().endScope()
   requestAnimationFrame(renderPrediction);
@@ -205,5 +215,21 @@ async function load_classification_model() {
 }
 
 
-Promise.all([load_detection_model(), load_classification_model()]).then(setupPage);
-// setupPage();
+
+Promise.all([load_detection_model(), load_classification_model()])
+
+function capture() {
+  var canvas = document.getElementById('canvas');
+  var video = document.getElementById('videoElement');
+  var videoCanvas = document.getElementById('videoCanvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const predictions = videoCanvas.data
+  predictions.forEach((prediction,index) => {
+    if (prediction[4] === 0) {
+      canvas.getContext('2d').drawImage(video, prediction[0], prediction[1], prediction[2], prediction[3], index*50, 0, 50, 70);
+    }
+  })
+}
+
+ setupPage();
